@@ -13,15 +13,15 @@
       </div>
     </group>
 
-    <group :title="'还有'+person+'人，你没给投票'">
-      <x-button type="primary" :disabled="person!='0'" @click="submit">提交</x-button>
+    <group :title="'赞成票:'+support+'反对票:'+oppose+'弃票:'+giveup">
+      <x-button type="primary" @click.native="submit()" :disabled="!condition">{{'你还没给'+person+'人投票'}}</x-button>
     </group>
 
   </div>
 </template>
 
 <script>
-  import {Checker, CheckerItem, Popup, Divider, Group, Cell, Range, XButton} from 'vux'
+  import {Checker, CheckerItem, Popup, Divider, Group, Cell, Range, XButton, Toast} from 'vux'
 
   export default {
     components: {
@@ -37,7 +37,11 @@
     name: 'hello',
     data () {
       return {
-        person: 10,
+        person: 24,
+        support: 0,
+        oppose: 0,
+        giveup: 0,
+        condition: false,
         selecter: [
           {name: 'a', uid: '1', type: '0'},
           {name: 'b', uid: '2', type: '0'},
@@ -67,10 +71,38 @@
       }
     },
     methods: {
-      submit () {
-
+      submit: function () {
+        console.log(this.selecter)
       }
-    }
+    },
+    watch: {
+      selecter: {
+        handler: function (value) {
+          var person, support, oppose, giveup;
+          person = 0;
+          support = 0;
+          oppose = 0;
+          giveup = 0;
+          for (var i = 0; i < value.length; i++) {
+            if (value[i].type == 0) person++;
+            if (value[i].type == 1) support++;
+            if (value[i].type == 2) oppose++;
+            if (value[i].type == 3) giveup++;
+            this.person = person;
+            this.support = support;
+            this.oppose = oppose;
+            this.giveup = giveup;
+            if (person == 0 && support <= 20) {
+              this.condition = true;
+            }
+            else {
+              this.condition = false;
+            }
+          }
+        },
+        deep: true
+      },
+    },
   }
 </script>
 
