@@ -1,25 +1,74 @@
 <template>
   <div>
-    <div>
-      <br>
-      <x-progress :percent="Number(percent1)"></x-progress>
-      <br>
-    </div>
+    <group title="投票">
+      <div v-for="i in selecter">
+        <!--{{i}}-->
+        <cell :title="'候选人'+i.name">
+          <checker v-model="i.type" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
+            <checker-item value="1">赞成</checker-item>
+            <checker-item value="2">反对</checker-item>
+            <checker-item value="3">弃票</checker-item>
+          </checker>
+        </cell>
+      </div>
+    </group>
+
+    <group :title="'还有'+person+'人，你没给投票'">
+      <x-button type="primary" :disabled="person!='0'" @click="submit">提交</x-button>
+    </group>
+
   </div>
 </template>
 
 <script>
-  import {XProgress, Box} from 'vux'
+  import {Checker, CheckerItem, Popup, Divider, Group, Cell, Range, XButton} from 'vux'
 
   export default {
     components: {
-      XProgress,
-      Box
+      Checker,
+      CheckerItem,
+      Divider,
+      Group,
+      Cell,
+      Popup,
+      Range,
+      XButton
     },
     name: 'hello',
     data () {
       return {
-        percent1: 100
+        person: 10,
+        selecter: [
+          {name: 'a', uid: '1', type: '0'},
+          {name: 'b', uid: '2', type: '0'},
+          {name: 'c', uid: '3', type: '0'},
+          {name: 'd', uid: '4', type: '0'},
+          {name: 'e', uid: '5', type: '0'},
+          {name: 'f', uid: '6', type: '0'},
+          {name: 'g', uid: '7', type: '0'},
+          {name: 'h', uid: '8', type: '0'},
+          {name: 'i', uid: '9', type: '0'},
+          {name: 'j', uid: '10', type: '0'},
+          {name: 'k', uid: '11', type: '0'},
+          {name: 'l', uid: '12', type: '0'},
+          {name: 'm', uid: '13', type: '0'},
+          {name: 'n', uid: '14', type: '0'},
+          {name: 'o', uid: '15', type: '0'},
+          {name: 'p', uid: '16', type: '0'},
+          {name: 'q', uid: '17', type: '0'},
+          {name: 'r', uid: '18', type: '0'},
+          {name: 's', uid: '19', type: '0'},
+          {name: 't', uid: '20', type: '0'},
+          {name: 'u', uid: '21', type: '0'},
+          {name: 'v', uid: '22', type: '0'},
+          {name: 'y', uid: '23', type: '0'},
+          {name: 'x', uid: '24', type: '0'}
+        ]
+      }
+    },
+    methods: {
+      submit () {
+
       }
     }
   }
@@ -27,5 +76,16 @@
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
+  .box {
+    padding: 0 15px;
+  }
 
+  .demo1-item {
+    border: 1px solid #ececec;
+    padding: 5px 15px;
+  }
+
+  .demo1-item-selected {
+    border: 1px solid green;
+  }
 </style>
