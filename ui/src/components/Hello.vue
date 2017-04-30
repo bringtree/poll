@@ -2,7 +2,6 @@
   <div>
     <group title="投票">
       <div v-for="i in selecter">
-        <!--{{i}}-->
         <cell :title="'候选人'+i.name">
           <checker v-model="i.type" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
             <checker-item value="1">赞成</checker-item>
