@@ -19,16 +19,14 @@ router.get('/', function (ctx) {
 
 router.get('/wx_login', function (ctx) {
   var router = 'get_wx_access_token';
-  // var return_uri = 'http%3A%2F%2F127.0.0.1%3a3000%2Foauth%2F' + router;
-  var return_uri = 'http%3A%2F%2Fwww.bringtree.cn%2Foauth%2F' + router;
+  var return_uri = 'http%3A%2F%2F127.0.0.1%3a3000%2Foauth%2F' + router;
+  // var return_uri = 'http%3A%2F%2Fwww.bringtree.cn%2Foauth%2F' + router;
   var scope = 'snsapi_userinfo';
   ctx.redirect('https://open.weixin.qq.com/connect/oauth2/authorize?appid=' + appID + '&redirect_uri=' + return_uri + '&response_type=code&scope=' + scope + '&state=STATE#wechat_redirect')
-
 });
 
 router.get('/oauth/get_wx_access_token', async function (ctx) {
   var code = ctx.query.code;
-
   var res = await request({
     method: 'GET',
     uri: 'https://api.weixin.qq.com/sns/oauth2/access_token?appid=' + appID + '&secret=' + appsecret + '&code=' + code + '&grant_type=authorization_code',
@@ -36,9 +34,9 @@ router.get('/oauth/get_wx_access_token', async function (ctx) {
   });
   if (res.statusCode === 200) {
     var data = JSON.parse(res.body);
-    // console.log(JSON.parse(res.body));
     var access_token = data.access_token;
     var openid = data.openid;
+    // var refresh_token = data.refresh_token
   }
 
 
@@ -53,9 +51,9 @@ router.get('/oauth/get_wx_access_token', async function (ctx) {
                               <p><img src='" + userinfo.headimgurl + "' /></p>\
                               <p>" + userinfo.city + "，" + userinfo.province + "，" + userinfo.country + "</p>\
                           ";
-
-
 });
+
+
 
 app
   .use(router.routes())
