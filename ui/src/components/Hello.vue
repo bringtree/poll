@@ -1,6 +1,6 @@
 <template>
   <div>
-    <group title="投票">
+    <group :title="'投票'+uid">
       <div v-for="i in selecter">
         <cell :title="'候选人'+i.name">
           <checker v-model="i.type" default-item-class="demo1-item" selected-item-class="demo1-item-selected">
@@ -13,7 +13,8 @@
     </group>
 
     <group :title="'赞成票:'+support+'反对票:'+oppose+'弃票:'+giveup">
-      <x-button type="primary" @click.native="submit()" :disabled="!condition">{{'你还没给'+person+'人投票'}}</x-button>
+      <x-button type="primary" @click.native="submit()" :disabled="condition">{{person==0?'确认':'你还没给'+person+'人投票'}}
+      </x-button>
     </group>
 
   </div>
@@ -40,6 +41,7 @@
         support: 0,
         oppose: 0,
         giveup: 0,
+        uid: this.$route.query.openid,
         condition: false,
         selecter: [
           {name: 'a', uid: '1', type: '0'},
@@ -70,8 +72,17 @@
       }
     },
     methods: {
-      submit: function () {
-        console.log(this.selecter)
+      submit () {
+        this.$http.post('/oauth/poll', {
+          uid: this.uid,
+          selecter: this.selecter
+        })
+          .then(function (res) {
+            console.log(res)
+          })
+          .catch(function (err) {
+            console.log(err)
+          })
       }
     },
     watch: {
@@ -102,6 +113,8 @@
         deep: true
       },
     },
+    mounted () {
+    }
   }
 </script>
 
