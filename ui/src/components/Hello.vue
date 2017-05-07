@@ -5,28 +5,50 @@
       <input type="text" placeholder="请输入投票码" class="cdkey" v-model="cdkey">
       <input type="button" value="提交" class="submit" @click="submit">
     </div>
+    <toast v-model="success" type="text">{{msg}}</toast>
+    <toast v-model="error" type="warn">{{msg}}</toast>
   </div>
 </template>
 
 <script>
+  import {ToastPlugin, Toast} from 'vux'
   import router from '../router/index'
   export default {
+    components: {
+      ToastPlugin,
+      Toast
+    },
     data(){
       return {
-        cdkey: ""
+        error: false,
+        success: false,
+        cdkey: "",
+        msg: ''
       }
     },
     methods: {
       submit () {
-        this.$http.post('/oauth/cdkey',this.cdkey)
-          .then(function () {
-
+        this.$http.post('/oauth/cdkey', {'cdkey': this.cdkey})
+          .then((res) => {
+            var data = res.data
+            if (data.type == 'successfully') {
+              this.success = true
+              this.error = false
+              this.msg = data.msg
+              sessionStorage.setItem('cdkey', this.cdkey)
+              router.push('header/login')
+            }
+            else {
+              this.success = false
+              this.error = true
+              this.msg = data.msg
+            }
           })
-          .catch (function () {
-
-        })
-        sessionStorage.setItem('cdkey', this.cdkey)
-        router.push('header/login')
+          .catch((e) => {
+            this.success = false
+            this.error = true
+            this.msg = '发生未知错误'
+          })
       }
     },
     mounted () {

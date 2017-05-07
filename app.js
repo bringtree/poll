@@ -11,27 +11,35 @@ const mongoose = require("mongoose");
 
 mongoose.connect("mongodb://localhost:27017/poll_text");
 let voterSchema = mongoose.Schema({
-  uid: String,
-  selecter: {
+  cdkey: String,
+  candidate: {
     type: Array, default: []
   },
   state: {type: Number, default: 0}
 });
 
-let selecterSchema = mongoose.Schema({
+let candidateSchema = mongoose.Schema({
   name: String,
+  grade: String,
+  faculty: String,
+  political: String,
+  work: String,
+  honor: String,
+  evaluate: String,
+  motto: String,
   uid: String,
+  src: String,
   good: {type: Number, default: 0},
   bad: {type: Number, default: 0},
   neutrality: {type: Number, default: 0}
 });
 
 let voterModel = mongoose.model('voterSchema', voterSchema);
-let selecterModel = mongoose.model('selecterSchema', selecterSchema);
+let candidateModel = mongoose.model('candidateSchema', candidateSchema);
 
 // // 测试数据
 // var me = new voterModel({
-//   uid: 'omCQ-01vEQ8F4IJTdZzbRHm1kTew'
+//   cdkey: 'omCQ-01vEQ8F4IJTdZzbRHm1kTew'
 // })
 // me.save()
 //
@@ -39,7 +47,7 @@ let selecterModel = mongoose.model('selecterSchema', selecterSchema);
 // var abc = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'y', 'x']
 // for (x in abc) {
 //   console.log(x)
-//   var me = new selecterModel({
+//   var me = new candidateModel({
 //     name: abc[x],
 //     uid: (i++),
 //   })
@@ -48,25 +56,69 @@ let selecterModel = mongoose.model('selecterSchema', selecterSchema);
 
 app.use(bodyParser());
 
+router.post('/oauth/cdkey', async function (ctx) {
+  var cdkey = ctx.request.body.cdkey
+  try {
+    var voter = await voterModel.findOne({cdkey: cdkey})
+    if (voter.state === 0) {
+      ctx.body = {
+        type: 'successfully',
+        msg: '"还未投票"'
+      }
+    }
+    else if (voter.state === 1) {
+      ctx.body = {
+        type: 'error',
+        msg: "已经投票过了"
+      }
+    }
+  }
+  catch (e) {
+    ctx.body = {
+      type: 'error',
+      msg: "输入的cdkey有误"
+    }
+  }
+})
 
+
+router.post('/api/detail', async function (ctx) {
+  var uid = ctx.request.body.uid
+  try {
+    var candidate = await candidateModel.findOne({uid: uid})
+    ctx.body = {
+      name: candidate.name,
+      grade: candidate.grade,
+      faculty: candidate.faculty,
+      political: candidate.political,
+      work: candidate.work,
+      honor: candidate.honor,
+      evaluate: candidate.evaluate,
+      motto: candidate.motto,
+      src: candidate.src,
+    }
+  } catch (e) {
+    console.log(e)
+  }
+})
 
 router.post('/oauth/poll', async function (ctx) {
   var cdkey = ctx.request.body.cdkey;
-  var selecter = ctx.request.body.selecter;
+  var candidate = ctx.request.body.candidate;
 
   // 对投票表记录操作
-  var voter = await voterModel.findOne({'uid': cdkey});
+  var voter = await voterModel.findOne({'cdkey': cdkey});
   if (voter.state == '0') {
-    let voter_action = await voterModel.update({'uid': cdkey}, {$set: {'selecter': selecter, 'state': '1'}}).exec();
+    let voter_action = await voterModel.update({'cdkey': cdkey}, {$set: {'candidate': candidate, 'state': '1'}}).exec();
     if (voter_action.nModified == '1') {
       // 对统计表操作
-      for (x in selecter) {
-        if (selecter[x].type == '1')
-          await selecterModel.update({'uid': selecter[x].uid}, {$inc: {'good': 1}}).exec();
-        if (selecter[x].type == '2')
-          await selecterModel.update({'uid': selecter[x].uid}, {$inc: {'bad': 1}}).exec();
-        if (selecter[x].type == '3')
-          await selecterModel.update({'uid': selecter[x].uid}, {$inc: {'neutrality': 1}}).exec();
+      for (x in candidate) {
+        if (candidate[x].type == '1')
+          await candidateModel.update({'uid': candidate[x].uid}, {$inc: {'good': 1}}).exec();
+        if (candidate[x].type == '2')
+          await candidateModel.update({'uid': candidate[x].uid}, {$inc: {'bad': 1}}).exec();
+        if (candidate[x].type == '3')
+          await candidateModel.update({'uid': candidate[x].uid}, {$inc: {'neutrality': 1}}).exec();
       }
       ctx.body = '操作成功'
     }
@@ -81,7 +133,7 @@ router.post('/oauth/poll', async function (ctx) {
 
 router.get('/search/:bid', async function (ctx) {
   const bid = String(ctx.params.bid);
-  var result = await selecterModel.findOne({uid: bid});
+  var result = await candidateModel.findOne({uid: bid});
   ctx.body = {
     uid: result.uid,
     good: result.good,

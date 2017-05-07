@@ -1,40 +1,62 @@
 <template>
   <div style="padding-top:43px">
-    <img :src="src">
+    <img :src="candidate.src">
     <div class="summary">
-      <div>姓名: {{name}}</div>
-      <div>年级: {{grade}}</div>
-      <div>学院: {{faculty}}</div>
-      <div>政治面貌: {{political}}</div>
+      <div>姓名: {{candidate.name}}</div>
+      <div>年级: {{candidate.grade}}</div>
+      <div>学院: {{candidate.faculty}}</div>
+      <div>政治面貌: {{candidate.political}}</div>
     </div>
     <div class="detail">
-      <div>曾任职务: {{work}}</div>
-      <div>所获荣誉: {{honor}}</div>
-      <div>自我评价: {{evaluate}}</div>
-      <div>座右铭: {{motto}}</div>
+      <div>曾任职务: {{candidate.work}}</div>
+      <div>所获荣誉: {{candidate.honor}}</div>
+      <div>自我评价: {{candidate.evaluate}}</div>
+      <div>座右铭: {{candidate.motto}}</div>
     </div>
+    <toast v-model="success" type="text">{{msg}}</toast>
+    <toast v-model="error" type="warn">{{msg}}</toast>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
+  import {ToastPlugin, Toast} from 'vux'
 
   export default{
+    components: {
+      ToastPlugin,
+      Toast
+    },
     data () {
       return {
-        src: require('../assets/photo.png'),
-        name: '我的姓名',
-        grade: '2016级',
-        faculty: '数学与信息学院',
-        political: '党员',
-        work: '',
-        honor: '',
-        evaluate: '',
-        motto: ''
+        error: false,
+        success: false,
+        msg: '',
+        candidate: {
+          src: require('../assets/photo.png'),
+          name: '正在加载中',
+          grade: '正在加载中',
+          faculty: '正在加载中',
+          political: '正在加载中',
+          work: '正在加载中',
+          honor: '正在加载中',
+          evaluate: '正在加载中',
+          motto: '正在加载中'
+        }
       }
     },
     mounted () {
-      var uid = this.$route.query.uid
-      console.log(uid)
+      var form = {uid: this.$route.query.uid}
+
+      this.$http.post('/api/detail', form)
+        .then((res) => {
+          this.candidate = res.data;
+          this.candidate.src = res.data.src
+        })
+        .catch((e) => {
+          this.success = false
+          this.error = true
+          this.msg = '发生未知错误'
+        })
     }
 
   }

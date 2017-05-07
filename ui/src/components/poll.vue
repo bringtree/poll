@@ -2,7 +2,7 @@
   <div>
     <div style="padding-top:43px">
       <grid :rows="2">
-        <grid-item v-for="i in selecter" :key="selecter.uid">
+        <grid-item v-for="i in candidate" :key="candidate.uid">
           <div align="center"><img :src="i.src" width="80%" @click="goDeatil(i.uid)"></div>
           <span class="grid-center">{{i.name}}  {{i.grade}}</span>
           <span class="grid-center">{{i.faculty}}</span>
@@ -43,7 +43,7 @@
         oppose: 0,
         giveup: 0,
         condition: false,
-        selecter: [
+        candidate: [
           {
             uid: '1',
             name: '我的姓名',
@@ -243,23 +243,23 @@
     methods: {
       submit () {
         this.$http.post('/oauth/poll', {
-          cdkey:sessionStorage.getItem('cdkey'),
-          selecter: this.selecter
+          cdkey: sessionStorage.getItem('cdkey'),
+          candidate: this.candidate
         })
-          .then(function (res) {
+          .then((res) => {
             console.log(res)
           })
-          .catch(function (err) {
+          .catch((err) => {
             console.log(err)
           })
       },
       goDeatil (i) {
-        sessionStorage.setItem('selecter', JSON.stringify(this.selecter))
+        sessionStorage.setItem('candidate', JSON.stringify(this.candidate))
         router.push('detail?uid=' + i);
       }
     },
     watch: {
-      selecter: {
+      candidate: {
         handler: function (value) {
           var person, support, oppose, giveup
           person = 0
@@ -287,12 +287,12 @@
       },
     },
     mounted: function () {
-      var data = sessionStorage.getItem('selecter');
+      var data = sessionStorage.getItem('candidate');
       if (data != null) {
-        this.selecter = JSON.parse(data)
+        this.candidate = JSON.parse(data)
       }
       else {
-        this.selecter = [
+        this.candidate = [
           {
             uid: '1',
             name: '我的姓名',
