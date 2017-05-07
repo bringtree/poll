@@ -31,7 +31,12 @@
         evaluate: '',
         motto: ''
       }
+    },
+    mounted () {
+      var uid = this.$route.query.uid
+      console.log(uid)
     }
+
   }
 </script>
 

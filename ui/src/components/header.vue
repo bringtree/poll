@@ -6,7 +6,7 @@
 </template>
 
 <script type="text/ecmascript-6">
-  import{XHeader} from 'vux'
+  import {XHeader} from 'vux'
   export default{
     components: {
       XHeader

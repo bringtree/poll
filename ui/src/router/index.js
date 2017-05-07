@@ -5,7 +5,7 @@ import Login from '@/components/login'
 import Poll from '@/components/poll'
 import Detail from '@/components/detail'
 import Header from '@/components/header'
-Vue.use(Router);
+Vue.use(Router)
 
 export default new Router({
   routes: [
@@ -15,24 +15,24 @@ export default new Router({
       component: Hello
     },
     {
-      path:'/header',
-      name:'header',
-      component:Header,
-      children:[
+      path: '/header',
+      name: 'header',
+      component: Header,
+      children: [
         {
-          path:'login',
+          path: 'login',
           name: 'Login',
-          component:Login
+          component: Login
         },
         {
-          path:'poll',
-          name:'poll',
-          component:Poll
+          path: 'poll',
+          name: 'poll',
+          component: Poll
         },
         {
-          path:'detail',
-          name:'detail',
-          component:Detail
+          path: 'detail',
+          name: 'detail',
+          component: Detail
         }
       ]
     }
