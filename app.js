@@ -7,14 +7,13 @@ const router = require('koa-router')();
 const bodyParser = require('koa-bodyparser');
 const request = require('request-promise');
 const mongoose = require("mongoose");
+const uuid = require('node-uuid')
 
 
-mongoose.connect("mongodb://localhost:27017/poll_text");
+mongoose.connect("mongodb://bringtree:bringtree@119.29.59.163:27017/admin");
 let voterSchema = mongoose.Schema({
-  cdkey: String,
-  candidate: {
-    type: Array, default: []
-  },
+  cdkey: {type: String, unique: true},
+  candidate: {type: Array, default: []},
   state: {type: Number, default: 0}
 });
 
@@ -33,16 +32,16 @@ let candidateSchema = mongoose.Schema({
   bad: {type: Number, default: 0},
   neutrality: {type: Number, default: 0}
 });
+let supermanSchema = mongoose.Schema({
+  name: String,
+});
 
 let voterModel = mongoose.model('voterSchema', voterSchema);
 let candidateModel = mongoose.model('candidateSchema', candidateSchema);
 
-// // 测试数据
-// var me = new voterModel({
-//   cdkey: 'omCQ-01vEQ8F4IJTdZzbRHm1kTew'
-// })
-// me.save()
-//
+// 测试数据
+
+
 // var i = 1;
 // var abc = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'y', 'x']
 // for (x in abc) {
@@ -83,7 +82,7 @@ router.post('/oauth/cdkey', async function (ctx) {
 
 
 router.post('/api/detail', async function (ctx) {
-  var uid = ctx.request.body.uid
+  var uid = ctx.request.body.uid;
   try {
     var candidate = await candidateModel.findOne({uid: uid})
     ctx.body = {
@@ -102,6 +101,8 @@ router.post('/api/detail', async function (ctx) {
   }
 })
 
+
+// 这段代码风险很高,需要完善.
 router.post('/oauth/poll', async function (ctx) {
   var cdkey = ctx.request.body.cdkey;
   var candidate = ctx.request.body.candidate;
@@ -120,14 +121,23 @@ router.post('/oauth/poll', async function (ctx) {
         if (candidate[x].type == '3')
           await candidateModel.update({'uid': candidate[x].uid}, {$inc: {'neutrality': 1}}).exec();
       }
-      ctx.body = '操作成功'
+      ctx.body = {
+        type: 'successfully',
+        msg: '操作成功'
+      }
     }
     else {
-      ctx.body = '操作失败'
+      ctx.body = {
+        type: 'error',
+        msg: '操作失败'
+      }
     }
   }
   else {
-    ctx.body = '你已经投票过了'
+    ctx.body = {
+      type: 'error',
+      msg: '你已经投票过了'
+    }
   }
 });
 
@@ -140,6 +150,27 @@ router.get('/search/:bid', async function (ctx) {
     bad: result.bad,
     neutrality: result.neutrality
   }
+});
+
+router.get('/api/getkey', async function (ctx) {
+
+  var flag = 1;
+  while (flag) {
+    var cdkey = uuid.v4().slice(0, 8);
+    var me = new voterModel({
+      cdkey: cdkey
+    });
+    await me.save(function (e) {
+      if (e == null) {
+        flag = 0;
+        ctx.body = cdkey;
+      }
+      else {
+        flag = 1;
+      }
+    })
+  }
+
 });
 
 

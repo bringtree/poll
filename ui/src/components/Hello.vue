@@ -1,6 +1,8 @@
 <template>
   <div>
     <div class="container">
+      <h3>华南农业大学</h3>
+      <h3>第三十一次学生代表大会</h3>
       <img src="../assets/school_type.jpg">
       <input type="text" placeholder="请输入投票码" class="cdkey" v-model="cdkey">
       <input type="button" value="提交" class="submit" @click="submit">
@@ -73,6 +75,7 @@
     margin: 0 auto;
     margin-top: 1rem;
     display: block;
+    text-align: center;
 
   }
 
@@ -83,5 +86,10 @@
     border: 0.2rem skyblue solid;
     border-radius: 2rem;
     background: white;
+    text-align: center;
+  }
+
+  h3{
+    text-align: center;
   }
 </style>

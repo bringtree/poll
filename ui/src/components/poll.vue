@@ -14,10 +14,15 @@
         </grid-item>
       </grid>
     </div>
+    <group :title="'反对票:'+oppose+'，触发非必答题'" v-if="oppose>=5">
+      <x-input placeholder="(另选名单)你心目中理想的候选人是？" v-model="superman"></x-input>
+    </group>
     <group :title="'赞成票:'+support+'反对票:'+oppose+'弃票:'+giveup">
-      <x-button type="primary" @click.native="submit()" :disabled="!condition">{{person==0?'确认':'你还没给'+person+'人投票'}}
+      <x-button type="primary" @click.native="submit()" :disabled="!condition">{{submitMsg}}
       </x-button>
     </group>
+    <toast v-model="success" type="text">{{msg}}</toast>
+    <toast v-model="error" type="warn">{{msg}}</toast>
   </div>
 
 
@@ -25,7 +30,7 @@
 
 <script type="text/ecmascript-6">
   import router from "../router/index.js"
-  import {Checker, CheckerItem, Grid, Group, GridItem, Popup, XButton} from 'vux'
+  import {Checker, CheckerItem, Grid, Group, GridItem, Popup, XButton, ToastPlugin, Toast, XInput} from 'vux'
   export default {
     components: {
       Checker,
@@ -34,10 +39,16 @@
       Popup,
       GridItem,
       XButton,
-      Group
+      Group,
+      ToastPlugin,
+      Toast,
+      XInput
     },
     data () {
       return {
+        error: false,
+        success: false,
+        msg: '',
         person: 24,
         support: 0,
         oppose: 0,
@@ -237,20 +248,36 @@
             type: '0'
           },
         ],
-        showMenus: false
+        showMenus: false,
+        submitMsg: '',
+        superman: ''
       }
     },
     methods: {
       submit () {
         this.$http.post('/oauth/poll', {
           cdkey: sessionStorage.getItem('cdkey'),
-          candidate: this.candidate
+          candidate: this.candidate,
+          superman: this.superman
+
         })
           .then((res) => {
-            console.log(res)
+            var data = res.data
+            if (data.type == 'successfully') {
+              this.success = true
+              this.error = false
+              this.msg = data.msg
+            }
+            else {
+              this.success = false
+              this.error = true
+              this.msg = data.msg
+            }
           })
           .catch((err) => {
-            console.log(err)
+            this.success = false
+            this.error = true
+            this.msg = '发生未知错误'
           })
       },
       goDeatil (i) {
@@ -275,11 +302,21 @@
             this.support = support
             this.oppose = oppose
             this.giveup = giveup
-            if (person == 0 && support <= 20) {
+            if (person != 0) {
+              this.submitMsg = '你还没给' + this.person + '人投票'
+              this.condition = false;
+            }
+            else if (oppose < 4) {
+              this.submitMsg = '反对票过少'
+              this.condition = false;
+            }
+            else if (support + giveup >= 20) {
+              this.submitMsg = '提交'
               this.condition = true;
             }
-            else {
-              this.condition = false;
+            else if (oppose >= 5) {
+              this.submitMsg = '提交'
+              this.condition = true;
             }
           }
         },
@@ -503,13 +540,15 @@
     display: block;
     text-align: center;
     color: #666;
-
     border: 1px solid #ececec;
     padding: 5px 15px;
   }
 
   .demo1-item-selected {
+    background: rgb(81, 195, 50);
+    border-radius: 4%;
     border: 1px solid green;
+    color: white;
   }
 
 

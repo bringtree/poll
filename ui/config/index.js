@@ -29,19 +29,25 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://localhost:3000/api',
+        target: 'http://www.bringtree.cn/api',
         changeOrigin: true,
         pathRewrite: {
           '^/api': ''
         }
       },
       '/oauth': {
-        target: 'http://localhost:3000/oauth',
+        target: 'http://www.bringtree.cn/oauth',
         changeOrigin: true,
         pathRewrite: {
           '^/oauth': ''
         }
-
+      },
+      '/assets': {
+        target: 'http://www.bringtree.cn/assets',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/assets': ''
+        }
       }
     },
     // CSS Sourcemaps off by default because relative paths are "buggy"
