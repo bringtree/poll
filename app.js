@@ -38,6 +38,7 @@ let supermanSchema = mongoose.Schema({
 
 let voterModel = mongoose.model('voterSchema', voterSchema);
 let candidateModel = mongoose.model('candidateSchema', candidateSchema);
+let supermanModel = mongoose.model('supermanSchema', supermanSchema);
 
 // 测试数据
 
@@ -106,12 +107,16 @@ router.post('/api/detail', async function (ctx) {
 router.post('/oauth/poll', async function (ctx) {
   var cdkey = ctx.request.body.cdkey;
   var candidate = ctx.request.body.candidate;
-
   // 对投票表记录操作
   var voter = await voterModel.findOne({'cdkey': cdkey});
   if (voter.state == '0') {
     let voter_action = await voterModel.update({'cdkey': cdkey}, {$set: {'candidate': candidate, 'state': '1'}}).exec();
+//     let voter_action = await voterModel.update({'cdkey': cdkey}, {$set: {'state': '1'}}).exec();
+    var superman = new supermanModel({
+      name: ctx.request.body.superman
+    });
     if (voter_action.nModified == '1') {
+      await superman.save();
       // 对统计表操作
       for (x in candidate) {
         if (candidate[x].type == '1')

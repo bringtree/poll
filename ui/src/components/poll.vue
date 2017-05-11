@@ -255,9 +255,20 @@
     },
     methods: {
       submit () {
+        var candidate = this.candidate
+        var candidate_fix = [];
+        for (var i = 0; i < candidate.length; i++) {
+          candidate_fix[i] = {
+            uid: candidate[i].uid,
+            name: candidate[i].name,
+            grade: candidate[i].grade,
+            faculty: candidate[i].faculty,
+            type: candidate[i].type,
+          }
+        }
         this.$http.post('/oauth/poll', {
           cdkey: sessionStorage.getItem('cdkey'),
-          candidate: this.candidate,
+          candidate: candidate_fix,
           superman: this.superman
 
         })
@@ -335,7 +346,7 @@
             name: '我的姓名',
             grade: '2016级',
             faculty: '数学与信息学院',
-            src: require('../assets/photo.jpg'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -343,7 +354,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -351,7 +362,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -359,7 +370,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -367,7 +378,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -375,7 +386,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -383,7 +394,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -391,7 +402,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -399,7 +410,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -407,7 +418,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -415,7 +426,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -423,7 +434,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -431,7 +442,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -439,7 +450,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -447,7 +458,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -455,7 +466,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -463,7 +474,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -471,7 +482,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -479,7 +490,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -487,7 +498,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -495,7 +506,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -503,7 +514,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -511,7 +522,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
           {
@@ -519,7 +530,7 @@
             name: 'a',
             grade: '1',
             faculty: 'c',
-            src: require('../assets/photo.png'),
+            src: 'http://opqi4h4yx.bkt.clouddn.com/photo.jpg',
             type: '0'
           },
         ]
