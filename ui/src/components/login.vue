@@ -20,7 +20,6 @@
     },
     methods: {
       access () {
-        window.scrollTo(0,0)
         router.push('poll')
       }
     }

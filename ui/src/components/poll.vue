@@ -293,6 +293,7 @@
       },
       goDeatil (i) {
         sessionStorage.setItem('candidate', JSON.stringify(this.candidate))
+        sessionStorage.setItem('local', document.body.scrollTop)
         router.push('detail?uid=' + i);
       }
     },
@@ -318,7 +319,7 @@
               this.condition = false;
             }
             else if (oppose < 4) {
-              this.submitMsg = '反对票过少'
+              this.submitMsg = '反对票少于4票不能提交'
               this.condition = false;
             }
             else if (support + giveup >= 20) {
@@ -336,6 +337,8 @@
     },
     mounted: function () {
       var data = sessionStorage.getItem('candidate');
+      var local = sessionStorage.getItem('local')
+      window.scrollTo(0, Number(local))
       if (data != null) {
         this.candidate = JSON.parse(data)
       }
